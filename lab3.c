@@ -10,7 +10,27 @@ int** read_board_from_file(char* filename){
     FILE *fp = NULL;
     int** board = NULL;
 
-    // replace this comment with your code
+    fp = fopen(filename, "r");
+    board = malloc(ROW_SIZE * sizeof(int *));
+    for (int i = 0; i < ROW_SIZE; i++) {
+        board[i] = malloc(COL_SIZE * sizeof(int));
+    }
+    for (int i = 0; i < ROW_SIZE; i++) {
+        for (int j = 0; j < COL_SIZE; j++) {
+            fscanf(fp, "%d,", &board[i][j]);
+        }
+    }
+    fclose(fp);
+
+    /* print the board
+    for (int i = 0; i < ROW_SIZE; i++) {
+        printf("Row %d: ", i);
+        for (int j = 0; j < COL_SIZE; j++) {
+            printf("%d,", board[i][j]);
+        }
+        printf("\n");
+    }
+    */
 
     return board;
 }
@@ -22,5 +42,5 @@ int is_board_valid(){
     param_struct* parameter;
     
     // replace this comment with your code
-    
+    return 0;
 }

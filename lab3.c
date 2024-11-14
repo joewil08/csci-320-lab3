@@ -35,6 +35,10 @@ int** read_board_from_file(char* filename){
     return board;
 }
 
+void* validate(void* arg) {
+    param_struct* parameters = (param_struct*) arg;
+
+}
 
 int is_board_valid(){
     pthread_t* tid;  /* the thread identifiers */
@@ -99,7 +103,4 @@ int is_board_valid(){
     return 1; // the board is valid
 }
 
-void* validate(void* arg) {
-    param_struct* parameters = (param_struct*) arg;
 
-}

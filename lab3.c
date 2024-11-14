@@ -36,8 +36,24 @@ int** read_board_from_file(char* filename){
 }
 
 void* validate(void* arg) {
-    param_struct* parameters = (param_struct*) arg;
+    param_struct* p = (param_struct*) arg;
+    worker_validation[p->id] = 1;
+    int validNums[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0}; // 0 will turn to 1 when corresponding number is found
 
+    // check the numbers in rows/columns/subgrids
+    for (int row = p->starting_row; row <= p->ending_row; row++) {
+        for (int col = p->starting_col; col < p->ending_col; col++) {
+            int num = sudoku_board[row][col];
+            validNums[num - 1] = 1;
+        }
+    }
+
+    // if a number is missing, then the thread is invalid
+    for (int i = 0; i < 9; i++) {
+        if (validNums[i] != 1) {
+            worker_validation[p->id] = 0;
+        }
+    }
 }
 
 int is_board_valid(){

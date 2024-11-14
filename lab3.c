@@ -42,7 +42,7 @@ void* validate(void* arg) {
 
     // check the numbers in rows/columns/subgrids
     for (int row = p->starting_row; row <= p->ending_row; row++) {
-        for (int col = p->starting_col; col < p->ending_col; col++) {
+        for (int col = p->starting_col; col <= p->ending_col; col++) {
             int num = sudoku_board[row][col];
             validNums[num - 1] = 1;
         }
@@ -61,6 +61,7 @@ int is_board_valid(){
     pthread_attr_t attr;
     param_struct* parameter;
     
+    tid = (pthread_t*)malloc(NUM_OF_THREADS * sizeof(pthread_t));
     parameter = (param_struct*)malloc(NUM_OF_THREADS * sizeof(param_struct));
     worker_validation = (int*)malloc(NUM_OF_THREADS * sizeof(int));
     int threadNumber = 0;
@@ -72,7 +73,7 @@ int is_board_valid(){
         parameter[threadNumber].starting_col = 0;
         parameter[threadNumber].ending_row = i;
         parameter[threadNumber].ending_col = COL_SIZE - 1;
-        pthread_create(&(tid[threadNumber]), &attr, validate, &(parameter[threadNumber]));
+        pthread_create(&(tid[threadNumber]), NULL, validate, &(parameter[threadNumber]));
         threadNumber++;
     }
 
@@ -83,7 +84,7 @@ int is_board_valid(){
         parameter[threadNumber].starting_col = i;
         parameter[threadNumber].ending_row = ROW_SIZE - 1;
         parameter[threadNumber].ending_col = i;
-        pthread_create(&(tid[threadNumber]), &attr, validate, &(parameter[threadNumber]));
+        pthread_create(&(tid[threadNumber]), NULL, validate, &(parameter[threadNumber]));
         threadNumber++;
     }
 
@@ -96,7 +97,7 @@ int is_board_valid(){
         parameter[threadNumber].starting_col = col;
         parameter[threadNumber].ending_row = row + 2;
         parameter[threadNumber].ending_col = col + 2;
-        pthread_create(&(tid[threadNumber]), &attr, validate, &(parameter[threadNumber]));
+        pthread_create(&(tid[threadNumber]), NULL, validate, &(parameter[threadNumber]));
         threadNumber++;
 
         // move to next subgrid without going out of bounds
@@ -116,6 +117,9 @@ int is_board_valid(){
         }
     }
     
+    free(worker_validation);
+    free(tid);
+
     return 1; // the board is valid
 }
 
